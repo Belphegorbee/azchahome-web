@@ -4,6 +4,8 @@ const filesToCache = [
   "/index.html",
   "/manifest.json",
   "/sw.js",
+ "/assets/menu/loadscreen3.png",
+ "/assets/menu/loadscreen2.png",
   "/assets/menu/loadscreen.jpg",
   "/assets/menu/banner1.jpg",
   "/assets/menu/banner2.jpg",
