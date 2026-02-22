@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azcha Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading">
+    <img src="assets/menu/loadscreen.jpg" alt="Loading" class="full-screen">
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="hidden">
+    <!-- Background -->
+    <img src="assets/menu/background1.jpg" class="background">
+
+    <!-- Banner atas + profil -->
+    <div class="banner-top">
+      <img src="assets/menu/banner1.jpg" class="banner">
+      <img src="assets/menu/profile.png" class="profile" onclick="alert('Profil clicked!')">
+    </div>
+
+    <!-- Grid 4 icon -->
+    <div class="grid-container">
+      <div class="grid-item" onclick="iconClicked(this)">
+        <img src="assets/menu/icon1.png">
+        <span>Belajar</span>
+      </div>
+      <div class="grid-item" onclick="iconClicked(this)">
+        <img src="assets/menu/icon2.png">
+        <span>Moment</span>
+      </div>
+      <div class="grid-item" onclick="iconClicked(this)">
+        <img src="assets/menu/icon3.png">
+        <span>Tontonan Baik</span>
+      </div>
+      <div class="grid-item" onclick="iconClicked(this)">
+        <img src="assets/menu/icon4.png">
+        <span>Membantu Ibu</span>
+      </div>
+    </div>
+
+    <!-- Banner bawah -->
+    <div class="banner-bottom">
+      <img src="assets/menu/banner2.jpg" class="banner">
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
