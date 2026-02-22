@@ -1,23 +1,26 @@
-// sw.js
 const cacheName = "azchahome-cache-v1";
 const filesToCache = [
   "/",
   "/index.html",
-  "/loadscreen.jpg",
-  "/banner1.jpg",
-  "/banner2.jpg",
-  "/background1.jpg",
-  "/icon1-4.png"
+  "/manifest.json",
+  "/assets/menu/loadscreen.jpg",
+  "/assets/menu/banner1.jpg",
+  "/assets/menu/banner2.jpg",
+  "/assets/menu/background1.jpg",
+  "/assets/menu/icon1.png",
+  "/assets/menu/icon2.png",
+  "/assets/menu/icon3.png",
+  "/assets/menu/icon4.png"
 ];
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(
+self.addEventListener("install", (event) => {
+  event.waitUntil(
     caches.open(cacheName).then((cache) => cache.addAll(filesToCache))
   );
 });
 
-self.addEventListener("fetch", (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => response || fetch(event.request))
   );
 });
