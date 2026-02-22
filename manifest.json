@@ -19,8 +19,8 @@
       "type": "image/png"
     }
 =======
-    { "src": "assets/menu/loadscreen.jpg", "sizes": "192x192", "type": "image/jpeg" },
-    { "src": "assets/menu/loadscreen.jpg", "sizes": "512x512", "type": "image/jpeg" }
+    { "src": "assets/menu/loadscreen.jpg", "sizes": "192x192", "type": "image/jpg" },
+    { "src": "assets/menu/loadscreen.jpg", "sizes": "512x512", "type": "image/jpg" }
 >>>>>>> f082e60 (Update PWA: loadscreen.jpg as icon, sw.js caching paths fixed)
   ]
 }
