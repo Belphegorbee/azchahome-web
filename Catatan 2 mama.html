@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff00ff">
+<link rel="apple-touch-icon" href="logo192.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pencatatan Mama Azcha</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+body { background:#ffe4f0; color:#1f1f1f; }
+
+/* HEADER */
+.header {
+  padding:25px 20px 35px;
+  background:#ffccdd;
+  border-radius:0 0 40px 40px;
+}
+
+/* EVENT LIST di atas saldo */
+.event-wrapper {
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.event-card {
+  background:white;
+  border:2px solid #ff00ff;
+  border-radius:15px;
+  padding:12px;
+}
+
+.event-title {
+  font-weight:700;
+  margin-bottom:10px;
+  color:#ff00ff;
+  text-align:center;
+}
+
+/* GRID EVENT */
+.event-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+  gap:10px;
+}
+
+.event-item {
+  background:#ffe4f0;
+  border:2px solid #ff00ff;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+  font-size:14px;
+}
+
+.event-btn {
+  margin-top:8px;
+  padding:6px 10px;
+  border:none;
+  border-radius:10px;
+  background:#ff00ff;
+  color:white;
+  cursor:pointer;
+  width:100%;
+  transition:0.2s;
+}
+
+.event-btn:hover { transform:scale(1.05); }
+
+/* SALDO */
+.total-box {
+  padding:18px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.3);
+}
+
+.total-value { font-size:28px; font-weight:700; color:#ff00ff; }
+
+.saldo-grid {
+  display:grid;
+  grid-template-columns: repeat(2,1fr);
+  gap:12px;
+  margin-top:20px;
+}
+
+.card {
+  background:#ffe4f0;
+  padding:14px;
+  border-radius:18px;
+  border:3px solid #ff00ff;
+}
+
+.card-value { font-weight:700; color:#ff00ff; }
+
+/* MENU */
+.menu {
+  padding:20px;
+  display:grid;
+  grid-template-columns: repeat(2,1fr);
+  gap:14px;
+}
+
+.menu-item {
+  background:#ffe4f0;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+  border:3px solid #ff00ff;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition:0.2s;
+}
+
+.menu-item:active { transform:scale(0.95); }
+
+.menu-item::after {
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  background:rgba(255,0,255,0.4);
+  border-radius:50%;
+  transform:scale(0);
+  opacity:0;
+}
+
+.menu-item:active::after {
+  transform:scale(3);
+  opacity:1;
+  transition:0.4s;
+}
+
+/* OVERLAY */
+.overlay {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:998;
+}
+
+.overlay.active {
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* POPUP */
+.popup {
+  position:fixed;
+  bottom:-100%;
+  left:0;
+  width:100%;
+  background:#fff0f7;
+  border-radius:25px 25px 0 0;
+  padding:20px;
+  transition:0.4s ease;
+  box-shadow:0 -10px 30px rgba(0,0,0,0.25);
+  z-index:999;
+}
+
+.popup.active {
+  bottom:0;
+}
+
+/* DRAG BAR */
+.drag-bar {
+  width:40px;
+  height:5px;
+  background:#ff00ff;
+  border-radius:10px;
+  margin:0 auto 10px;
+}
+
+/* INPUT */
+input {
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:12px;
+  border:2px solid #ff00ff;
+  outline:none;
+}
+
+select {
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:12px;
+  border:2px solid #ff00ff;
+  outline:none;
+  background:white;
+  font-weight:600;
+  color:#ff00ff;
+}
+
+.select-pemasukan {
+  border-color: #00c853;
+  color: #00c853;
+}
+
+.select-pengeluaran {
+  border-color: #ff1744;
+  color: #ff1744;
+}
+
+/* BUTTON */
+.btn-main {
+  width:100%;
+  padding:14px;
+  background:#ff00ff;
+  color:white;
+  border:none;
+  border-radius:14px;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+.btn-main:hover { background:#e600e6; }
+
+.btn-close {
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  background:#ddd;
+  border:none;
+  border-radius:12px;
+}
+
+/* LOADING */
+.loading {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:1000;
+}
+
+.loading.active { opacity:1; pointer-events:auto; }
+
+.spinner {
+  width:60px;
+  height:60px;
+  border:6px solid #fff;
+  border-top:6px solid #ff00ff;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform:rotate(360deg); }
+}
+
+/* TOAST */
+.toast {
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%) translateY(-100px);
+  background:#ff00ff;
+  color:white;
+  padding:12px 20px;
+  border-radius:20px;
+  font-weight:bold;
+  transition:0.4s;
+  z-index:1001;
+}
+
+.toast.show {
+  transform:translateX(-50%) translateY(0);
+}
+</style>
+</head>
+
+<body>
+  
+  <div class="event-wrapper">
+  <div class="event-card">
+    <div class="event-title">Utang</div>
+    <div class="event-grid" id="utangGrid"></div>
+  </div>
+</div>
+
+<div class="event-wrapper" id="eventList">
+  <div class="event-card">
+    <div class="event-title">Event</div>
+    <div class="event-grid" id="eventGrid"></div>
+  </div>
+</div>
+
+<div class="header">
+  <h1>PENCATATAN MAMA AZCHA</h1>
+  <div class="total-box">
+    <div>Total</div>
+    <div class="total-value" id="total">Rp 0</div>
+  </div>
+
+  <div class="saldo-grid">
+    <div class="card"><div>Belanja</div><div class="card-value" id="belanja">Rp 0</div></div>
+    <div class="card"><div>Darurat</div><div class="card-value" id="darurat">Rp 0</div></div>
+    <div class="card"><div>Bebas</div><div class="card-value" id="bebas">Rp 0</div></div>
+    <div class="card"><div>Mama</div><div class="card-value" id="mama">Rp 0</div></div>
+    <div class="card"><div>Busu</div><div class="card-value" id="busu">Rp 0</div></div>
+  </div>
+</div>
+
+<div class="menu">
+  <div class="menu-item" onclick="openPopup('belanja')">🛒 DUIT BELANJA</div>
+  <div class="menu-item" onclick="openPopup('darurat')">🚨 DUIT DARURAT</div>
+  <div class="menu-item" onclick="openPopup('mama')">📒 PENCATATAN MAMA</div>
+  <div class="menu-item" onclick="openPopup('busu')">👵 DUIT BUSU</div>
+  <div class="menu-item" onclick="openPopup('bebas')">💎 DUIT BEBAS</div>
+  <div class="menu-item" onclick="openPopupEvent()">🎉 EVENT</div>
+ <div class="menu-item" onclick="openPopupUtang()">💸 UTANG</div>
+</div>
+
+<!-- POPUP INPUT DATA -->
+<div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+<div class="popup" id="popup">
+  <div class="drag-bar"></div>
+  <h3 id="popupTitle" style="margin-bottom:10px;">Input Belanja</h3>
+
+  <input id="nama" placeholder="Nama Barang">
+ <select id="kategori">
+  <option value="pengeluaran">Pengeluaran</option>
+  <option value="pemasukan">Pemasukan</option>
+</select>
+  <input id="jumlah" type="number" placeholder="Jumlah">
+
+  <button class="btn-main" id="btnSimpan" onclick="kirimData()">SIMPAN</button>
+  <button class="btn-close" onclick="closePopup()">Tutup</button>
+</div>
+
+<!-- POPUP EVENT -->
+<div class="popup" id="popupEvent">
+  <div class="drag-bar"></div>
+  <h3 style="margin-bottom:10px;">Input Event</h3>
+
+  <input id="e_nama" placeholder="Nama Event">
+  <input id="e_tanggal" type="date">
+  <input id="e_jumlah" type="number" placeholder="Estimasi Jumlah">
+  <input id="e_catatan" placeholder="Catatan">
+
+  <button class="btn-main" onclick="kirimEvent()">SIMPAN EVENT</button>
+  <button class="btn-close" onclick="closePopup()">Tutup</button>
+</div>
+
+<!-- POPUP UTANG -->
+<div class="popup" id="popupUtang">
+  <div class="drag-bar"></div>
+  <h3 style="margin-bottom:10px;">Input Utang</h3>
+
+  <input id="u_nama" placeholder="Nama Orang">
+  <input id="u_jumlah" type="number" placeholder="Jumlah Utang">
+  <select id="u_saldo">
+  <option value="belanja">Belanja</option>
+  <option value="darurat">Darurat</option>
+  <option value="mama">Mama</option>
+  <option value="busu">Busu</option>
+  <option value="bebas">Bebas</option>
+</select>
+  <input id="u_catatan" placeholder="Catatan">
+
+  <button class="btn-main" onclick="kirimUtang()">SIMPAN UTANG</button>
+  <button class="btn-close" onclick="closePopup()">Tutup</button>
+</div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+</div>
+
+<div class="toast" id="toast">Tersimpan ✔️</div>
+
+<script>
+const url = "https://script.google.com/macros/s/AKfycbw_1hm6eSxw980WlC_XaJojnOTG599ilYXjiae5oNJCYezBGyZJSK4KOFTGAFmQ0ZU0Lg/exec";
+
+const popup = document.getElementById("popup");
+const popupEvent = document.getElementById("popupEvent");
+const popupUtang = document.getElementById("popupUtang");
+const overlay = document.getElementById("overlay");
+const loading = document.getElementById("loading");
+const toast = document.getElementById("toast");
+const btnSimpan = document.getElementById("btnSimpan");
+
+const namaInput = document.getElementById("nama");
+const kategoriInput = document.getElementById("kategori");
+function updateKategoriStyle() {
+  kategoriInput.classList.remove("select-pemasukan", "select-pengeluaran");
+
+  if (kategoriInput.value === "pemasukan") {
+    kategoriInput.classList.add("select-pemasukan");
+  } else {
+    kategoriInput.classList.add("select-pengeluaran");
+  }
+}
+
+// Jalankan saat berubah
+kategoriInput.addEventListener("change", updateKategoriStyle);
+
+// Jalankan saat pertama load popup
+updateKategoriStyle();
+const jumlahInput = document.getElementById("jumlah");
+const popupTitle = document.getElementById("popupTitle");
+
+let currentType = "belanja";
+
+function openPopup(type="belanja") {
+  currentType = type;
+
+  if (type === "darurat") popupTitle.innerText = "Input Darurat";
+  else if (type === "mama") popupTitle.innerText = "Catatan Mama";
+  else if (type === "busu") popupTitle.innerText = "Catatan Busu";
+  else if (type === "bebas") popupTitle.innerText = "Catatan Bebas";
+  else popupTitle.innerText = "Input Belanja";
+
+  popup.classList.add("active");
+  overlay.classList.add("active");
+}
+
+function openPopupEvent() {
+  popupEvent.classList.add("active");
+  overlay.classList.add("active");
+}
+
+function openPopupUtang() {
+  popupUtang.classList.add("active");
+  overlay.classList.add("active");
+}
+
+function closePopup() {
+  popup.classList.remove("active");
+  popupEvent.classList.remove("active");
+  popupUtang.classList.remove("active");
+  overlay.classList.remove("active");
+}
+
+
+function showLoading(state) {
+  loading.classList.toggle("active", state);
+}
+
+function showToast(msg) {
+  toast.innerText = msg;
+  toast.classList.add("show");
+  setTimeout(()=> toast.classList.remove("show"), 2000);
+}
+
+function kirimData() {
+  const nama = namaInput.value;
+  const kategori = kategoriInput.value;
+let jumlah = Number(jumlahInput.value);
+// 🔥 LOGIKA ARUS UANG
+if (kategori === "pemasukan") {
+  jumlah = -Math.abs(jumlah); // jadi minus
+} else {
+  jumlah = Math.abs(jumlah); // tetap positif
+}
+
+  if (!nama || !kategori || !jumlah) {
+    showToast("Isi semua dulu ⚠️");
+    return;
+  }
+
+  btnSimpan.disabled = true;
+  showLoading(true);
+
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ 
+      nama, 
+      kategori, 
+      jumlah,
+      tipe: currentType
+    })
+  })
+  .then(res => res.text())
+  .then(() => {
+    showToast("Data diperbarui ✔️");
+
+    namaInput.value = "";
+    kategoriInput.value = "";
+    jumlahInput.value = "";
+
+    closePopup();
+    loadSaldo();
+  })
+  .catch(() => {
+    showToast("Gagal ❌");
+  })
+  .finally(() => {
+    btnSimpan.disabled = false;
+    showLoading(false);
+  });
+}
+
+function kirimEvent(){
+  const nama = document.getElementById("e_nama").value;
+  const tanggal = document.getElementById("e_tanggal").value;
+  const jumlah = document.getElementById("e_jumlah").value;
+  const catatan = document.getElementById("e_catatan").value;
+
+  if(!nama || !tanggal || !jumlah){
+    showToast("Isi semua dulu ⚠️");
+    return;
+  }
+
+  showLoading(true);
+
+  fetch(url,{
+    method:"POST",
+    body:JSON.stringify({
+      tipe:"event",
+      nama,
+      tanggal,
+      jumlah,
+      catatan
+    })
+  })
+  .then(res=>res.text())
+  .then(()=>{
+    showToast("Event ditambahkan ✔️");
+    document.getElementById("e_nama").value="";
+    document.getElementById("e_tanggal").value="";
+    document.getElementById("e_jumlah").value="";
+    document.getElementById("e_catatan").value="";
+    closePopup();
+    loadEvent();
+  })
+  .finally(()=> showLoading(false));
+}
+
+function kirimUtang(){
+  const peminjam = document.getElementById("u_nama").value;
+  const jumlah = document.getElementById("u_jumlah").value;
+  const catatan = document.getElementById("u_catatan").value;
+  const dariSaldo = document.getElementById("u_saldo").value;
+
+  if(!peminjam || !jumlah){
+    showToast("Isi semua dulu ⚠️");
+    return;
+  }
+
+  showLoading(true);
+
+  fetch(url,{
+    method:"POST",
+    body:JSON.stringify({
+      tipe:"utang",
+      peminjam,
+      jumlah,
+      catatan,
+      dariSaldo
+    })
+  })
+  .then(res=>res.text())
+  .then(()=>{
+    showToast("Utang tersimpan ✔️");
+
+    document.getElementById("u_nama").value="";
+    document.getElementById("u_jumlah").value="";
+    document.getElementById("u_catatan").value="";
+
+    closePopup();
+    loadUtang(); // 🔥 penting
+    loadSaldo(); // 🔥 update saldo
+  })
+  .catch(()=> showToast("Gagal ❌"))
+  .finally(()=> showLoading(false));
+}
+
+function formatRupiah(angka) {
+  return "Rp " + Number(angka).toLocaleString("id-ID");
+}
+
+function loadSaldo() {
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("belanja").innerText = formatRupiah(data.belanja);
+      document.getElementById("darurat").innerText = formatRupiah(data.darurat);
+      document.getElementById("bebas").innerText = formatRupiah(data.bebas);
+      document.getElementById("mama").innerText = formatRupiah(data.mama);
+      document.getElementById("busu").innerText = formatRupiah(data.busu);
+      document.getElementById("total").innerText = formatRupiah(data.total);
+    });
+}
+
+// EVENT GRID
+function loadEvent(){
+ fetch(url+"?event=1")
+ .then(res=>res.json())
+ .then(data=>{
+   const grid = document.getElementById("eventGrid");
+   grid.innerHTML = "";
+   data.forEach(e=>{
+     if(e.status==="OPEN"){
+       const div = document.createElement("div");
+       div.className="event-item";
+       div.innerHTML = `
+        <b>${e.nama}</b><br>
+        ${e.tanggal}<br>
+        ${formatRupiah(e.jumlah)}<br>
+        <button class="event-btn" onclick="closeEvent(${e.row})">SELESAI</button>
+       `;
+       grid.appendChild(div);
+     }
+   });
+ });
+}
+
+function loadUtang(){
+ fetch(url+"?utang=1")
+ .then(res=>res.json())
+ .then(data=>{
+   const grid = document.getElementById("utangGrid");
+   grid.innerHTML = "";
+
+   data.forEach(u=>{
+     if(u.status==="OPEN"){
+       const div = document.createElement("div");
+       div.className="event-item";
+       div.innerHTML = `
+        <b>${u.peminjam}</b><br>
+        ${u.dariSaldo}<br>
+        ${formatRupiah(u.jumlah)}<br>
+        <button class="event-btn" onclick="closeUtang(${u.row}, '${u.dariSaldo}', ${u.jumlah}, '${u.peminjam}')">LUNAS</button>
+       `;
+       grid.appendChild(div);
+     }
+   });
+ });
+}
+
+function closeEvent(row){
+ fetch(url,{
+  method:"POST",
+  body:JSON.stringify({
+    tipe:"close_event",
+    row:row
+  })
+ })
+ .then(()=> {
+   loadEvent();
+   showToast("Event selesai ✔️");
+ })
+ .catch(()=> showToast("Gagal ❌"));
+}
+
+function closeUtang(row, dariSaldo, jumlah, peminjam){
+ fetch(url,{
+  method:"POST",
+  body:JSON.stringify({
+    tipe:"close_utang",
+    row:row,
+    dariSaldo:dariSaldo,
+    jumlah:jumlah,
+    peminjam:peminjam
+  })
+ })
+ .then(()=> {
+   loadUtang();
+   loadSaldo();
+   showToast("Utang lunas ✔️");
+ })
+ .catch(()=> showToast("Gagal ❌"));
+}
+
+// LOAD AWAL TANPA SPAM
+window.addEventListener('load', ()=>{
+  loadSaldo();
+  loadEvent();
+  loadUtang();
+});
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker aktif"))
+    .catch(err => console.log("SW gagal:", err));
+}
+
+</script>
+
+
+
+</body>
+</html>
